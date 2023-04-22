@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:petsmart_admin/blocs/docs_trains/docs_trains_bloc.dart';
 import 'package:petsmart_admin/ui/widgets/custom_action_button.dart';
 import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/label_with_text.dart';
+import 'package:petsmart_admin/ui/widgets/doctor/add_edit_doctor_dialog.dart';
 
 class DoctorCard extends StatefulWidget {
-  const DoctorCard({super.key});
+  final DocsTrainsBloc docsTrainsBloc;
+  final dynamic doctorDetails;
+  const DoctorCard({
+    super.key,
+    required this.docsTrainsBloc,
+    required this.doctorDetails,
+  });
 
   @override
   State<DoctorCard> createState() => _DoctorCardState();
@@ -25,18 +33,18 @@ class _DoctorCardState extends State<DoctorCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Expanded(
                     child: LabelWithText(
                       label: 'Name',
-                      text: 'Peter',
+                      text: widget.doctorDetails['name'],
                     ),
                   ),
                   Expanded(
                     child: LabelWithText(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       label: 'Phone',
-                      text: '9876152342',
+                      text: widget.doctorDetails['phone'],
                     ),
                   ),
                 ],
@@ -47,18 +55,18 @@ class _DoctorCardState extends State<DoctorCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Expanded(
                     child: LabelWithText(
                       label: 'Address',
-                      text: 'address line 1, address line 2',
+                      text: widget.doctorDetails['address_line'],
                     ),
                   ),
                   Expanded(
                     child: LabelWithText(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       label: 'Place',
-                      text: 'Kannur',
+                      text: widget.doctorDetails['place'],
                     ),
                   ),
                 ],
@@ -69,18 +77,18 @@ class _DoctorCardState extends State<DoctorCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Expanded(
                     child: LabelWithText(
                       label: 'District',
-                      text: 'Kannur',
+                      text: widget.doctorDetails['district'],
                     ),
                   ),
                   Expanded(
                     child: LabelWithText(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       label: 'State',
-                      text: 'Kerala',
+                      text: widget.doctorDetails['state'],
                     ),
                   ),
                 ],
@@ -88,17 +96,9 @@ class _DoctorCardState extends State<DoctorCard> {
               const SizedBox(
                 height: 10,
               ),
-              const LabelWithText(
+              LabelWithText(
                 label: 'Pin',
-                text: '670301',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomActionButton(
-                iconData: Icons.map_outlined,
-                onPressed: () {},
-                label: 'Location',
+                text: widget.doctorDetails['pin_code'],
               ),
               const Divider(
                 height: 40,
@@ -110,7 +110,14 @@ class _DoctorCardState extends State<DoctorCard> {
                     child: CustomActionButton(
                       color: Colors.red[700]!,
                       iconData: Icons.delete_forever_outlined,
-                      onPressed: () {},
+                      onPressed: () {
+                        widget.docsTrainsBloc.add(
+                          DeleteDocsTrainsEvent(
+                            docsTrainsId: widget.doctorDetails['id'],
+                            type: 'doctor',
+                          ),
+                        );
+                      },
                       label: 'Delete',
                     ),
                   ),
@@ -121,7 +128,15 @@ class _DoctorCardState extends State<DoctorCard> {
                     child: CustomActionButton(
                       color: Colors.teal[300]!,
                       iconData: Icons.edit_outlined,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AddEditDoctorDialog(
+                            docsTrainsBloc: widget.docsTrainsBloc,
+                            doctorDetails: widget.doctorDetails,
+                          ),
+                        );
+                      },
                       label: 'Edit',
                     ),
                   ),

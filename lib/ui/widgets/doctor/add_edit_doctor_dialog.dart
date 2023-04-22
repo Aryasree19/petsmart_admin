@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:petsmart_admin/ui/widgets/custom_action_button.dart';
+import 'package:petsmart_admin/blocs/docs_trains/docs_trains_bloc.dart';
+import 'package:petsmart_admin/util/value_validators.dart';
 
 import '../custom_button.dart';
 import '../custom_card.dart';
 
 class AddEditDoctorDialog extends StatefulWidget {
   final Map<String, dynamic>? doctorDetails;
+  final DocsTrainsBloc docsTrainsBloc;
   const AddEditDoctorDialog({
     super.key,
     this.doctorDetails,
+    required this.docsTrainsBloc,
   });
 
   @override
@@ -19,7 +22,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _placeController = TextEditingController();
   final TextEditingController _districtController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -30,13 +33,13 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
   void initState() {
     if (widget.doctorDetails != null) {
       _nameController.text = widget.doctorDetails!['name'];
-      _addressController.text = widget.doctorDetails!['address'];
+      _addressController.text = widget.doctorDetails!['address_line'];
       _phoneNumberController.text = widget.doctorDetails!['phone'];
-      _cityController.text = widget.doctorDetails!['city'];
+      _placeController.text = widget.doctorDetails!['place'];
       _districtController.text = widget.doctorDetails!['district'];
       _stateController.text = widget.doctorDetails!['state'];
       _descriptionController.text = widget.doctorDetails!['description'];
-      _pinCodeController.text = widget.doctorDetails!['pin'].toString();
+      _pinCodeController.text = widget.doctorDetails!['pin_code'];
     }
     super.initState();
   }
@@ -58,6 +61,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
             ),
             child: Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: ListView(
                 shrinkWrap: true,
                 children: [
@@ -120,13 +124,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                   CustomCard(
                     child: TextFormField(
                       controller: _nameController,
-                      validator: (value) {
-                        if (value != null && value.trim().isNotEmpty) {
-                          return null;
-                        } else {
-                          return 'Please enter Name';
-                        }
-                      },
+                      validator: alphaNumericValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg. Mr.John',
                       ),
@@ -147,13 +145,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                     child: TextFormField(
                       maxLines: 2,
                       controller: _descriptionController,
-                      validator: (value) {
-                        if (value != null && value.trim().isNotEmpty) {
-                          return null;
-                        } else {
-                          return 'Please enter description';
-                        }
-                      },
+                      validator: alphaNumericValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg.Decription of the doctor',
                       ),
@@ -175,13 +167,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                     child: TextFormField(
                       maxLines: 2,
                       controller: _addressController,
-                      validator: (value) {
-                        if (value != null && value.trim().isNotEmpty) {
-                          return null;
-                        } else {
-                          return 'Please enter address';
-                        }
-                      },
+                      validator: alphaNumericValidator,
                       decoration: const InputDecoration(
                         hintText: 'address line 1, address line 2',
                       ),
@@ -211,14 +197,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _phoneNumberController,
-                                validator: (value) {
-                                  if (value != null &&
-                                      value.trim().isNotEmpty) {
-                                    return null;
-                                  } else {
-                                    return 'Please enter Phone';
-                                  }
-                                },
+                                validator: alphaNumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'eg. 9876543210',
                                 ),
@@ -233,7 +212,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'City',
+                              'Place',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium
@@ -245,16 +224,8 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                             const SizedBox(height: 5),
                             CustomCard(
                               child: TextFormField(
-                                controller: _cityController,
-                                validator: (value) {
-                                  if ((value != null &&
-                                          value.trim().isNotEmpty) ||
-                                      widget.doctorDetails != null) {
-                                    return null;
-                                  } else {
-                                    return 'Please enter your city';
-                                  }
-                                },
+                                controller: _placeController,
+                                validator: alphaNumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kannur',
                                 ),
@@ -289,14 +260,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _districtController,
-                                validator: (value) {
-                                  if (value != null &&
-                                      value.trim().isNotEmpty) {
-                                    return null;
-                                  } else {
-                                    return 'Please enter your district';
-                                  }
-                                },
+                                validator: alphaNumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kannur',
                                 ),
@@ -324,15 +288,7 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _stateController,
-                                validator: (value) {
-                                  if ((value != null &&
-                                          value.trim().isNotEmpty) ||
-                                      widget.doctorDetails != null) {
-                                    return null;
-                                  } else {
-                                    return 'Please enter your state';
-                                  }
-                                },
+                                validator: alphaNumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kerala',
                                 ),
@@ -361,30 +317,13 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                       CustomCard(
                         child: TextFormField(
                           controller: _pinCodeController,
-                          validator: (value) {
-                            if ((value != null && value.trim().isNotEmpty) ||
-                                widget.doctorDetails != null) {
-                              return null;
-                            } else {
-                              return 'Please enter pin code';
-                            }
-                          },
+                          validator: numericValidator,
                           decoration: const InputDecoration(
                             hintText: 'eg.123456',
                           ),
                         ),
                       ),
                     ],
-                  ),
-                  const Divider(
-                    height: 30,
-                    color: Color.fromARGB(66, 176, 176, 176),
-                  ),
-                  CustomActionButton(
-                    iconData: Icons.map_outlined,
-                    color: Colors.purple[200]!,
-                    onPressed: () {},
-                    label: 'Select Location from Map',
                   ),
                   const Divider(
                     height: 30,
@@ -397,32 +336,34 @@ class _AddEditDoctorDialogState extends State<AddEditDoctorDialog> {
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         if (widget.doctorDetails != null) {
-                          // BlocProvider.of<PatientBloc>(context).add(
-                          //   EditPatientEvent(
-                          //     patientId: widget.patientDetails!['id'],
-                          //     name: _nameController.text.trim(),
-                          //     phone: _phoneNumberController.text.trim(),
-                          //     address: _addressController.text.trim(),
-                          //     city: _cityController.text.trim(),
-                          //     district: _districtController.text.trim(),
-                          //     dob: _dob!,
-                          //     gender: _gender,
-                          //     state: _stateController.text.trim(),
-                          //   ),
-                          // );
+                          widget.docsTrainsBloc.add(
+                            EditDocsTrainsEvent(
+                              docsTrainsId: widget.doctorDetails!['id'],
+                              name: _nameController.text.trim(),
+                              description: _descriptionController.text.trim(),
+                              phone: _phoneNumberController.text.trim(),
+                              address: _addressController.text.trim(),
+                              place: _placeController.text.trim(),
+                              district: _districtController.text.trim(),
+                              state: _stateController.text.trim(),
+                              pin: _pinCodeController.text.trim(),
+                              type: 'doctor',
+                            ),
+                          );
                         } else {
-                          // BlocProvider.of<PatientBloc>(context).add(
-                          //   AddPatientEvent(
-                          //     name: _nameController.text.trim(),
-                          //     phone: _phoneNumberController.text.trim(),
-                          //     address: _addressController.text.trim(),
-                          //     city: _cityController.text.trim(),
-                          //     district: _districtController.text.trim(),
-                          //     dob: _dob!,
-                          //     gender: _gender,
-                          //     state: _stateController.text.trim(),
-                          //   ),
-                          // );
+                          widget.docsTrainsBloc.add(
+                            AddDocsTrainsEvent(
+                              name: _nameController.text.trim(),
+                              description: _descriptionController.text.trim(),
+                              phone: _phoneNumberController.text.trim(),
+                              address: _addressController.text.trim(),
+                              place: _placeController.text.trim(),
+                              district: _districtController.text.trim(),
+                              state: _stateController.text.trim(),
+                              pin: _pinCodeController.text.trim(),
+                              type: 'doctor',
+                            ),
+                          );
                         }
 
                         Navigator.pop(context);
