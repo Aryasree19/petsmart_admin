@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     tabController = TabController(
       length: 8,
+      initialIndex: 5,
       vsync: this,
     );
     super.initState();

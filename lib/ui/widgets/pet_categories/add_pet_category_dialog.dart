@@ -1,14 +1,19 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:petsmart_admin/blocs/categories/categories_bloc.dart';
 import 'package:petsmart_admin/ui/widgets/custom_action_button.dart';
+import 'package:petsmart_admin/ui/widgets/custom_alert_dialog.dart';
 import 'package:petsmart_admin/util/custom_file_picker.dart';
+import 'package:petsmart_admin/util/value_validators.dart';
 
 import '../custom_button.dart';
 import '../custom_card.dart';
 
 class AddPetCategoryDialog extends StatefulWidget {
+  final CategoriesBloc categoriesBloc;
   const AddPetCategoryDialog({
     super.key,
+    required this.categoriesBloc,
   });
 
   @override
@@ -95,13 +100,7 @@ class _AddPetCategoryDialogState extends State<AddPetCategoryDialog> {
                   CustomCard(
                     child: TextFormField(
                       controller: _nameController,
-                      validator: (value) {
-                        if (value != null && value.trim().isNotEmpty) {
-                          return null;
-                        } else {
-                          return 'Please enter pet category name';
-                        }
-                      },
+                      validator: alphaNumericValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg. Dog',
                       ),
@@ -142,21 +141,24 @@ class _AddPetCategoryDialogState extends State<AddPetCategoryDialog> {
                     label: 'Add',
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        // BlocProvider.of<PatientBloc>(context).add(
-                        //   EditPatientEvent(
-                        //     patientId: widget.patientDetails!['id'],
-                        //     name: _nameController.text.trim(),
-                        //     phone: _phoneNumberController.text.trim(),
-                        //     address: _addressController.text.trim(),
-                        //     city: _cityController.text.trim(),
-                        //     district: _districtController.text.trim(),
-                        //     dob: _dob!,
-                        //     gender: _gender,
-                        //     state: _stateController.text.trim(),
-                        //   ),
-                        // );
-
-                        Navigator.pop(context);
+                        if (selectedFile != null) {
+                          widget.categoriesBloc.add(
+                            AddCategoriesEvent(
+                              category: _nameController.text.trim(),
+                              image: selectedFile!,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const CustomAlertDialog(
+                              title: 'Select Image',
+                              message: 'Select an image to continue',
+                              primaryButtonLabel: 'Ok',
+                            ),
+                          );
+                        }
                       }
                     },
                   ),
