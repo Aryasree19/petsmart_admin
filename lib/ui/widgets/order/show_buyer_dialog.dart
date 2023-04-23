@@ -4,7 +4,8 @@ import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/label_with_text.dart';
 
 class ShowBuyerDetailsDialog extends StatefulWidget {
-  const ShowBuyerDetailsDialog({super.key});
+  final dynamic listingDetails;
+  const ShowBuyerDetailsDialog({super.key, required this.listingDetails});
 
   @override
   State<ShowBuyerDetailsDialog> createState() => _ShowBuyerDetailsDialogState();
@@ -53,18 +54,18 @@ class _ShowBuyerDetailsDialogState extends State<ShowBuyerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'Name',
-                        text: 'Peter',
+                        text: widget.listingDetails['bought_user']['name'],
                       ),
                     ),
                     Expanded(
                       child: LabelWithText(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         label: 'Phone',
-                        text: '9876152342',
+                        text: widget.listingDetails['bought_user']['phone'],
                       ),
                     ),
                   ],
@@ -75,80 +76,14 @@ class _ShowBuyerDetailsDialogState extends State<ShowBuyerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'Email',
-                        text: 'peter@email.com',
-                      ),
-                    ),
-                    Expanded(
-                      child: LabelWithText(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        label: 'Contact Number',
-                        text: '87908764531',
+                        text: widget.listingDetails['bought_user']['email'],
                       ),
                     ),
                   ],
-                ),
-                const Divider(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Expanded(
-                      child: LabelWithText(
-                        label: 'Address',
-                        text: 'address line 1, address line 2',
-                      ),
-                    ),
-                    Expanded(
-                      child: LabelWithText(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        label: 'Place',
-                        text: 'Kannur',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Expanded(
-                      child: LabelWithText(
-                        label: 'District',
-                        text: 'Kannur',
-                      ),
-                    ),
-                    Expanded(
-                      child: LabelWithText(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        label: 'State',
-                        text: 'Kerala',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const LabelWithText(
-                  label: 'Pin',
-                  text: '670301',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomActionButton(
-                  iconData: Icons.map_outlined,
-                  onPressed: () {},
-                  label: 'Location',
                 ),
               ],
             ),

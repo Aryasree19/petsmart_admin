@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:petsmart_admin/blocs/manage_listings/manage_listings_bloc.dart';
 import 'package:petsmart_admin/ui/screens/pet_images.dart';
 import 'package:petsmart_admin/ui/widgets/custom_action_button.dart';
 import 'package:petsmart_admin/ui/widgets/custom_card.dart';
@@ -8,10 +10,12 @@ import 'package:petsmart_admin/ui/widgets/listing/show_seller_dialog.dart';
 class ListingCard extends StatelessWidget {
   final Color? hoverColor;
   final bool isOnDialog;
+  final dynamic listingDetails;
   const ListingCard({
     super.key,
     this.hoverColor = Colors.pink,
     this.isOnDialog = false,
+    required this.listingDetails,
   });
 
   @override
@@ -27,7 +31,7 @@ class ListingCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '#12',
+                '#${listingDetails['id'].toString()}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Colors.black,
                     ),
@@ -39,7 +43,7 @@ class ListingCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    'https://images.unsplash.com/photo-1676641244234-855100cee031?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                    listingDetails['images'][0]['image_url'],
                     height: 280,
                     width: 280,
                     fit: BoxFit.cover,
@@ -49,17 +53,16 @@ class ListingCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const LabelWithText(
+              LabelWithText(
                 label: 'Title',
-                text: 'Dobermann for sale',
+                text: listingDetails['title'],
               ),
               const SizedBox(
                 height: 10,
               ),
-              const LabelWithText(
+              LabelWithText(
                 label: 'Description',
-                text:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et sapien eget sem ornare lacinia quis a sapien.',
+                text: listingDetails['description'],
               ),
               const SizedBox(
                 height: 10,
@@ -77,7 +80,7 @@ class ListingCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '₹20000',
+                    '₹${listingDetails['price'].toString()}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.grey[800],
                           decoration: TextDecoration.lineThrough,
@@ -87,7 +90,7 @@ class ListingCard extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    '₹15000',
+                    '₹${listingDetails['discounted_price'].toString()}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -105,8 +108,8 @@ class ListingCard extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const PetImagesScreen(
-                              images: [],
+                            builder: (context) => PetImagesScreen(
+                              images: listingDetails['images'],
                             ),
                           ),
                         );
@@ -122,8 +125,8 @@ class ListingCard extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) =>
-                                    const ShowSellerDetailsDialog(),
+                                builder: (context) => ShowSellerDetailsDialog(
+                                    listingDetails: listingDetails),
                               );
                             },
                           ),
@@ -138,8 +141,8 @@ class ListingCard extends StatelessWidget {
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const PetImagesScreen(
-                                    images: [],
+                                  builder: (context) => PetImagesScreen(
+                                    images: listingDetails['images'],
                                   ),
                                 ),
                               );

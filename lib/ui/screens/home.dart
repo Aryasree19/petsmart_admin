@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petsmart_admin/blocs/manage_listings/manage_listings_bloc.dart';
 import 'package:petsmart_admin/ui/screens/home_screen_sections/complaints_screen.dart';
 import 'package:petsmart_admin/ui/screens/home_screen_sections/doctor_screen.dart';
 import 'package:petsmart_admin/ui/screens/home_screen_sections/listing_screen.dart';
@@ -24,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
 
+  final ManageListingsBloc manageListingsBloc = ManageListingsBloc();
+
   @override
   void initState() {
     Future.delayed(
@@ -44,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     tabController = TabController(
       length: 8,
-      initialIndex: 4,
+      initialIndex: 0,
       vsync: this,
     );
     super.initState();
@@ -75,201 +79,208 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(
-          color: Colors.pink,
-        ),
-        centerTitle: true,
-        title: Text(
-          getName(),
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                color: Colors.pink,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        elevation: 1,
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => CustomAlertDialog(
-                  title: 'Logout',
-                  message: 'Are you sure that you want to logout ?',
-                  primaryButtonLabel: 'Logout',
-                  primaryOnPressed: () async {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                      (route) => true,
-                    );
-                    await Supabase.instance.client.auth.signOut();
-                  },
-                  secondaryButtonLabel: 'Cancel',
-                  secondaryOnPressed: () => Navigator.pop(context),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.logout_outlined,
-              color: Colors.pink,
-            ),
+    return BlocProvider<ManageListingsBloc>.value(
+      value: manageListingsBloc,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          iconTheme: const IconThemeData(
+            color: Colors.pink,
           ),
-        ],
-      ),
-      body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: tabController,
-        children: const [
-          DashboardAndOrderScreen(),
-          ListingScreen(),
-          UserScreen(),
-          DoctorScreen(),
-          TrainerScreen(),
-          PetCategoriesScreen(),
-          ComplaintsScreen(),
-          SuggestionsScreen(),
-        ],
-      ),
-      drawer: Material(
-        color: Colors.pink[50],
-        child: SizedBox(
-          width: 350,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 30,
+          centerTitle: true,
+          title: Text(
+            getName(),
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  color: Colors.pink,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  "MENU",
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.pink[700],
-                      ),
-                  textAlign: TextAlign.start,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Dashboard & Orders",
-                  iconData: Icons.sell_outlined,
-                  onPressed: () {
-                    tabController.animateTo(0);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 0,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Listings",
-                  iconData: Icons.list_outlined,
-                  onPressed: () {
-                    tabController.animateTo(1);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 1,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Users",
-                  iconData: Icons.people_alt_outlined,
-                  onPressed: () {
-                    tabController.animateTo(2);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 2,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Doctors",
-                  iconData: Icons.medical_information_outlined,
-                  onPressed: () {
-                    tabController.animateTo(3);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 3,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Trainers",
-                  iconData: Icons.fitness_center_outlined,
-                  onPressed: () {
-                    tabController.animateTo(4);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 4,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Pet Categories",
-                  iconData: Icons.pets_outlined,
-                  onPressed: () {
-                    tabController.animateTo(5);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 5,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Complaints",
-                  iconData: Icons.report_outlined,
-                  onPressed: () {
-                    tabController.animateTo(6);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 6,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Suggestions",
-                  iconData: Icons.assistant_outlined,
-                  onPressed: () {
-                    tabController.animateTo(7);
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                  isSelected: tabController.index == 7,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                CustomDrawerButton(
-                  label: "Change Password",
-                  iconData: Icons.lock_open_outlined,
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => const ChangePasswordDialog());
-                  },
-                ),
-              ],
+          ),
+          elevation: 1,
+          actions: [
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => CustomAlertDialog(
+                    title: 'Logout',
+                    message: 'Are you sure that you want to logout ?',
+                    primaryButtonLabel: 'Logout',
+                    primaryOnPressed: () async {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                        (route) => true,
+                      );
+                      await Supabase.instance.client.auth.signOut();
+                    },
+                    secondaryButtonLabel: 'Cancel',
+                    secondaryOnPressed: () => Navigator.pop(context),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.logout_outlined,
+                color: Colors.pink,
+              ),
+            ),
+          ],
+        ),
+        body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: tabController,
+          children: [
+            DashboardAndOrderScreen(
+              manageListingsBloc: manageListingsBloc,
+            ),
+            ListingScreen(
+              manageListingsBloc: manageListingsBloc,
+            ),
+            UserScreen(),
+            DoctorScreen(),
+            TrainerScreen(),
+            PetCategoriesScreen(),
+            ComplaintsScreen(),
+            SuggestionsScreen(),
+          ],
+        ),
+        drawer: Material(
+          color: Colors.pink[50],
+          child: SizedBox(
+            width: 350,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    "MENU",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.pink[700],
+                        ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Dashboard & Orders",
+                    iconData: Icons.sell_outlined,
+                    onPressed: () {
+                      tabController.animateTo(0);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 0,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Listings",
+                    iconData: Icons.list_outlined,
+                    onPressed: () {
+                      tabController.animateTo(1);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 1,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Users",
+                    iconData: Icons.people_alt_outlined,
+                    onPressed: () {
+                      tabController.animateTo(2);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 2,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Doctors",
+                    iconData: Icons.medical_information_outlined,
+                    onPressed: () {
+                      tabController.animateTo(3);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 3,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Trainers",
+                    iconData: Icons.fitness_center_outlined,
+                    onPressed: () {
+                      tabController.animateTo(4);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 4,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Pet Categories",
+                    iconData: Icons.pets_outlined,
+                    onPressed: () {
+                      tabController.animateTo(5);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 5,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Complaints",
+                    iconData: Icons.report_outlined,
+                    onPressed: () {
+                      tabController.animateTo(6);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 6,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Suggestions",
+                    iconData: Icons.assistant_outlined,
+                    onPressed: () {
+                      tabController.animateTo(7);
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    isSelected: tabController.index == 7,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomDrawerButton(
+                    label: "Change Password",
+                    iconData: Icons.lock_open_outlined,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => const ChangePasswordDialog());
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

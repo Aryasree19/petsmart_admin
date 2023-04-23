@@ -4,7 +4,8 @@ import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/label_with_text.dart';
 
 class ShowSellerDetailsDialog extends StatefulWidget {
-  const ShowSellerDetailsDialog({super.key});
+  final dynamic listingDetails;
+  const ShowSellerDetailsDialog({super.key, required this.listingDetails});
 
   @override
   State<ShowSellerDetailsDialog> createState() =>
@@ -54,18 +55,18 @@ class _ShowSellerDetailsDialogState extends State<ShowSellerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'Name',
-                        text: 'Peter',
+                        text: widget.listingDetails['seller']['name'],
                       ),
                     ),
                     Expanded(
                       child: LabelWithText(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         label: 'Phone',
-                        text: '9876152342',
+                        text: widget.listingDetails['seller']['phone'],
                       ),
                     ),
                   ],
@@ -76,18 +77,18 @@ class _ShowSellerDetailsDialogState extends State<ShowSellerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'Email',
-                        text: 'peter@email.com',
+                        text: widget.listingDetails['seller']['email'],
                       ),
                     ),
                     Expanded(
                       child: LabelWithText(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         label: 'Contact Number',
-                        text: '87908764531',
+                        text: widget.listingDetails['phone'],
                       ),
                     ),
                   ],
@@ -98,18 +99,18 @@ class _ShowSellerDetailsDialogState extends State<ShowSellerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'Address',
-                        text: 'address line 1, address line 2',
+                        text: widget.listingDetails['address_line'],
                       ),
                     ),
                     Expanded(
                       child: LabelWithText(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         label: 'Place',
-                        text: 'Kannur',
+                        text: widget.listingDetails['place'],
                       ),
                     ),
                   ],
@@ -120,18 +121,18 @@ class _ShowSellerDetailsDialogState extends State<ShowSellerDetailsDialog> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: LabelWithText(
                         label: 'District',
-                        text: 'Kannur',
+                        text: widget.listingDetails['district'],
                       ),
                     ),
                     Expanded(
                       child: LabelWithText(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         label: 'State',
-                        text: 'Kerala',
+                        text: widget.listingDetails['state'],
                       ),
                     ),
                   ],
@@ -139,17 +140,9 @@ class _ShowSellerDetailsDialogState extends State<ShowSellerDetailsDialog> {
                 const SizedBox(
                   height: 10,
                 ),
-                const LabelWithText(
+                LabelWithText(
                   label: 'Pin',
-                  text: '670301',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomActionButton(
-                  iconData: Icons.map_outlined,
-                  onPressed: () {},
-                  label: 'Location',
+                  text: widget.listingDetails['pin_code'].toString(),
                 ),
               ],
             ),

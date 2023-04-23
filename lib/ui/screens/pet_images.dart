@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:petsmart_admin/ui/widgets/custom_progress_indicator.dart';
 
 class PetImagesScreen extends StatefulWidget {
-  final List<Map<String, dynamic>> images;
+  final List<dynamic> images;
   const PetImagesScreen({
     super.key,
     required this.images,
@@ -14,6 +15,12 @@ class PetImagesScreen extends StatefulWidget {
 }
 
 class _PetImagesScreenState extends State<PetImagesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Logger().wtf(widget.images);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,12 +59,11 @@ class _PetImagesScreenState extends State<PetImagesScreen> {
                   spacing: 20,
                   runSpacing: 20,
                   children: List<Widget>.generate(
-                    10,
+                    widget.images.length,
                     (index) => ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: CachedNetworkImage(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1676641244234-855100cee031?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                        imageUrl: widget.images[index]['image_url'],
                         fit: BoxFit.cover,
                         height: 200,
                         width: 200,

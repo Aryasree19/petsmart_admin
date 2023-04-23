@@ -3,7 +3,8 @@ import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/listing/listing_card.dart';
 
 class ShowListingDialog extends StatefulWidget {
-  const ShowListingDialog({super.key});
+  final dynamic listingDetails;
+  const ShowListingDialog({super.key, required this.listingDetails});
 
   @override
   State<ShowListingDialog> createState() => _ShowListingDialogState();
@@ -49,8 +50,9 @@ class _ShowListingDialogState extends State<ShowListingDialog> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: ListingCard(
+                    listingDetails: widget.listingDetails,
                     isOnDialog: true,
                     hoverColor: Colors.transparent,
                   ),
