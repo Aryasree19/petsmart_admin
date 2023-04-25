@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:petsmart_admin/blocs/dashboard_count/dashboard_count_bloc.dart';
 import 'package:petsmart_admin/ui/widgets/custom_action_button.dart';
 import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/custom_progress_indicator.dart';
@@ -28,10 +29,13 @@ class _DashboardAndOrderScreenState extends State<DashboardAndOrderScreen> {
   String? query;
   String status = 'ordered';
 
+  final DashboardCountBloc dashboardCountBloc = DashboardCountBloc();
+
   @override
   void initState() {
     super.initState();
     getProducts();
+    dashboardCountBloc.add(DashboardCountEvent());
   }
 
   void getProducts() {
@@ -72,27 +76,54 @@ class _DashboardAndOrderScreenState extends State<DashboardAndOrderScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: const [
-                    DashboardCard(
-                      label: 'Today\'s Orders',
-                      title: '20',
-                    ),
-                    DashboardCard(
-                      label: 'Total Listings',
-                      title: '100',
-                    ),
-                    DashboardCard(
-                      label: 'Total Doctors',
-                      title: '30',
-                    ),
-                    DashboardCard(
-                      label: 'Total Trainers',
-                      title: '40',
-                    ),
-                  ],
+                BlocProvider<DashboardCountBloc>.value(
+                  value: dashboardCountBloc,
+                  child: BlocConsumer<DashboardCountBloc, DashboardCountState>(
+                    listener: (context, dashState) {
+                      if (dashState is DashboardCountFailureState) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            title: 'Failed',
+                            message: dashState.message,
+                            primaryButtonLabel: 'Ok',
+                            primaryOnPressed: () {
+                              dashboardCountBloc.add(DashboardCountEvent());
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, dashState) {
+                      return dashState is DashboardCountSuccessState
+                          ? Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: [
+                                DashboardCard(
+                                  label: 'Total Orders',
+                                  title: dashState.dashbordCount['orders'],
+                                ),
+                                DashboardCard(
+                                  label: 'Total Listings',
+                                  title: dashState.dashbordCount['listings'],
+                                ),
+                                DashboardCard(
+                                  label: 'Total Doctors',
+                                  title: dashState.dashbordCount['doctors'],
+                                ),
+                                DashboardCard(
+                                  label: 'Total Trainers',
+                                  title: dashState.dashbordCount['trainers'],
+                                ),
+                              ],
+                            )
+                          : const Center(
+                              child: CustomProgressIndicator(),
+                            );
+                    },
+                  ),
                 ),
 
                 const Divider(

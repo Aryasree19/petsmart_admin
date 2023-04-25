@@ -3,8 +3,10 @@ import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/label_with_text.dart';
 
 class UserCard extends StatelessWidget {
+  final dynamic userDetails;
   const UserCard({
     super.key,
+    required this.userDetails,
   });
 
   @override
@@ -19,7 +21,7 @@ class UserCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '#12',
+                '#${userDetails['id'].toString()}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Colors.black,
                     ),
@@ -27,26 +29,26 @@ class UserCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const LabelWithText(
+              LabelWithText(
                 label: 'Name',
-                text: 'Peter',
+                text: userDetails['name'],
               ),
               const SizedBox(
                 height: 10,
               ),
               Row(
-                children: const [
+                children: [
                   Expanded(
                     child: LabelWithText(
                       label: 'Phone',
-                      text: '9876543210',
+                      text: userDetails['phone'],
                     ),
                   ),
                   Expanded(
                     child: LabelWithText(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       label: 'Email',
-                      text: 'peter@email.com',
+                      text: userDetails['email'],
                     ),
                   ),
                 ],
