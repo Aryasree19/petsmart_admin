@@ -100,7 +100,7 @@ class _AddPetCategoryDialogState extends State<AddPetCategoryDialog> {
                   CustomCard(
                     child: TextFormField(
                       controller: _nameController,
-                      validator: alphaNumericValidator,
+                      validator: alphanumericWithSpaceValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg. Dog',
                       ),

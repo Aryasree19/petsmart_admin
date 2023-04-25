@@ -5,6 +5,7 @@ import 'package:petsmart_admin/ui/screens/home.dart';
 import 'package:petsmart_admin/ui/widgets/custom_button.dart';
 import 'package:petsmart_admin/ui/widgets/custom_card.dart';
 import 'package:petsmart_admin/ui/widgets/custom_input_form_field.dart';
+import 'package:petsmart_admin/util/value_validators.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -124,14 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 controller: _emailController,
                                 prefixIcon: Icons.email,
                                 labelText: 'Email',
-                                validator: (value) {
-                                  if (value != null &&
-                                      value.trim().isNotEmpty) {
-                                    return null;
-                                  } else {
-                                    return "Please enter an email";
-                                  }
-                                },
+                                validator: emailValidator,
                               ),
                               const SizedBox(
                                 height: 10,

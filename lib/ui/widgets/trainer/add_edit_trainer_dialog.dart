@@ -125,7 +125,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                   CustomCard(
                     child: TextFormField(
                       controller: _nameController,
-                      validator: alphaNumericValidator,
+                      validator: alphanumericWithSpaceValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg. Mr.John',
                       ),
@@ -146,7 +146,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                     child: TextFormField(
                       maxLines: 2,
                       controller: _descriptionController,
-                      validator: alphaNumericValidator,
+                      validator: alphanumericWithSpecialCharsValidator,
                       decoration: const InputDecoration(
                         hintText: 'eg.Decription of the trainer',
                       ),
@@ -168,7 +168,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                     child: TextFormField(
                       maxLines: 2,
                       controller: _addressController,
-                      validator: alphaNumericValidator,
+                      validator: alphanumericWithSpecialCharsValidator,
                       decoration: const InputDecoration(
                         hintText: 'address line 1, address line 2',
                       ),
@@ -198,7 +198,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _phoneNumberController,
-                                validator: alphaNumericValidator,
+                                validator: phoneNumberValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'eg. 9876543210',
                                 ),
@@ -226,7 +226,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _placeController,
-                                validator: alphaNumericValidator,
+                                validator: alphanumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kannur',
                                 ),
@@ -261,7 +261,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _districtController,
-                                validator: alphaNumericValidator,
+                                validator: alphanumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kannur',
                                 ),
@@ -289,7 +289,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                             CustomCard(
                               child: TextFormField(
                                 controller: _stateController,
-                                validator: alphaNumericValidator,
+                                validator: alphanumericValidator,
                                 decoration: const InputDecoration(
                                   hintText: 'Kerala',
                                 ),
@@ -318,7 +318,7 @@ class _AddEditTrainerDialogState extends State<AddEditTrainerDialog> {
                       CustomCard(
                         child: TextFormField(
                           controller: _pinCodeController,
-                          validator: numericValidator,
+                          validator: pincodeValidator,
                           decoration: const InputDecoration(
                             hintText: 'eg.123456',
                           ),
